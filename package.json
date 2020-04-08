@@ -1,0 +1,38 @@
+{
+  "name": "minim1example-backend",
+  "version": "1.0.0",
+  "description": "Minim1 Example for EA subject (UPC-EETAC)",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -w",
+    "prod-start": "tsc -w && node build/src/index.js",
+    "prod-clear": "rmdir /S build",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marc285/Minim1Example-Backend.git"
+  },
+  "author": "Marc Cayuelas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marc285/Minim1Example-Backend/issues"
+  },
+  "homepage": "https://github.com/marc285/Minim1Example-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.7",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.3",
+    "@types/mongoose": "^5.7.8",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^13.9.7",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.8.1",
+    "typescript": "^3.8.3"
+  }
+}
