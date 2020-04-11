@@ -3,6 +3,7 @@ import degreeController from '../controllers/degreeController';
 
 const router: Router = Router();
 
-router.get('/:degreename/students', degreeController.getStudentsByDegree);
+router.get('/', degreeController.getDegrees);
+router.get('/:degreename/students/', degreeController.getStudentsByDegree);
 
 export default router;

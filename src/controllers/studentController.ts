@@ -7,45 +7,47 @@ class StudentController {
         //Returns the list of all the Students
         try{
             let students = await Student.find();
-            res.json(students).status(200);
+            res.status(200).json(students);
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
     public async getStudent (req:Request, res:Response){
-        //Gets the details of a Student
+        //Returns the details of a Student
         try{
-            let student = await Student.find({'name': req.params.studentname});
+            let {_id} = req.body;   //We need to send the _id of the student through the HTTP Body
+            
+            //let student = await Student.find({'name': req.params.studentname});
+            
+            let student = await Student.find({'_id': _id});
             if(!student){
-                console.log(`Student ${req.params.studentname} not found`);
-                res.json({"error": `Student ${req.params.studentname} not found`}).status(404);
+                console.log(`\nStudent ${req.params.studentname} with id ${_id} not found`);
+                res.status(404).json({"error": `Student ${req.params.studentname} with id ${_id} not found`});
             }
             else
-                res.json(student).status(200);
+                res.status(200).json(student);
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
     public async addStudent (req:Request, res:Response){
-        //Add a new Student
+        //Adds a new Student
         try{
             let {name, address, phones, studies} = req.body;
-
-            //Considering that Students can have the same name (no unique)
             let newStudent = new Student( {name,address,phones,studies} );
-            await newStudent.save();
-            console.log(`Added Student: ${newStudent}`);
-            res.status(201); 
+            await newStudent.save();    //Considering that Students can have the same name (no unique)
+            console.log(`\nAdded Student:\n ${newStudent}`);
+            res.status(201).json(newStudent); 
         }
         catch(error){
-            console.log(error);
-            res.status(500); 
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`}); 
         }
     }
 

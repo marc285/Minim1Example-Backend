@@ -3,21 +3,34 @@ import Student from '../models/Student';
 
 class DegreeController {
 
-    public async getStudentsByDegree(req:Request, res:Response){
+    public async getDegrees(req:Request, res:Response){
         try{
-            let students = await Student.find({studies: req.params.degreename});
+            let degrees = await Student.find({}, 'studies' );
+            console.log(`\nAll degrees:\n${degrees}`);
+            res.status(200).json(degrees);
+        }
+        catch(error){
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
+        }
+    }
+
+    public async getStudentsByDegree(req:Request, res:Response){
+        //Returns the Students enrolled in the specifid Degree ('studies')
+        try{
+            let students = await Student.find( {studies: req.params.degreename} );
             if(!students){
-                console.log("Not existing Degree or no Students enrolled");
-                res.json({"error": "Not existing Degree or no Students enrolled"}).status(404);
+                console.log("\nNot existing Degree or no Students enrolled");
+                res.status(404).json({"error": "Not existing Degree or no Students enrolled"});
             }
             else{
-                console.log(`Students enrolled in ${req.params.degreename}: ${students}`);
-                res.json(students).status(200);
+                console.log(`\nStudents enrolled in ${req.params.degreename}:\n ${students}`);
+                res.status(200).json(students);
             }
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 }

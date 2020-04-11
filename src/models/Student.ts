@@ -8,14 +8,14 @@ const StudentSchema: Schema = new Schema (
         phones: { 
             type: [ 
                 {
-                    name: {type: String, required: true, unique: true}, 
-                    number: {type: String, required: true, unique: true} //Each single name is mapped to each single number in a Student phone list
+                    name: {type: String}, 
+                    number: {type: String}
                 }
             ],
             required: true //At least a single phone provided
         },
         studies: { 
-            type: [ {type: String, unique: true} ], //No repeated degrees
+            type: [ {type: String} ],
             required: true //The Student is enrolled in at least one degree
         }
     }

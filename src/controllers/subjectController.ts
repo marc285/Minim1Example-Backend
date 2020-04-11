@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Subject from '../models/Subject';
 import Student from '../models/Student';
+import Subject from '../models/Subject';
 
 class SubjectController {
 
@@ -8,168 +8,149 @@ class SubjectController {
         //Returns the list of all the Subjects
         try{
             let subjects = await Subject.find();
-            res.json(subjects).status(200);
+            res.status(200).json(subjects);
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
     public async getSubject (req: Request, res: Response){
-        //Gets the details of a Subject
+        //Returns the details of a Subject
         try{
-            let subject = await Subject.findOne( {'name': req.params.subjectname} );
+            let subject = await Subject.findOne( {'name': req.params.subjectname} );    //We search by name (not by id) as Subjects are unique
             if(!subject){
-                console.log(`Subject ${req.params.subjectname} not found`);
-                res.json({"error": `Subject ${req.params.subjectname} not found`}).status(404);
+                console.log(`\nSubject ${req.params.subjectname} not found`);
+                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
             }
             else
-                res.json(subject).status(200);
+                res.status(200).json(subject);
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
     public async getStudents (req: Request, res: Response){
-        //Returns the list of Students of a given Subject
+        //Returns the Subject with the Students in it (insted of their IDs)
         try{
-            let checkSubject = await Subject.find( {'name': req.params.subjectname} );
+            let checkSubject = await Subject.find( {'name': req.params.subjectname} );  //We search by name (not by id) as Subjects are unique
             if(!checkSubject){
-                console.log(`Subject ${req.params.subjectname} not found`);
-                res.json({"error": `Subject ${req.params.subjectname} not found`}).status(404);
+                console.log(`\nSubject ${req.params.subjectname} not found`);
+                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
             }
             else{
-                let studentsIDs = await Subject.find( {'name': req.params.subjectname}, 'students');
-                //let students = await Student.findById(studentsIDs);
-                
-                let students = new Array();
-                for (let stID of studentsIDs){
-                    let match = await Student.findOne({'_id': stID}, 'name');
-                    if(match)
-                        students.push(match.toObject());
-                }
+                //let subj:Subject = new Subject();
 
-                /* for (let stID of studentsIDs){
-                    let match = await Student.findOne({'_id': stID});
-                    if(match)
-                        students.push(match.toObject());
-                } */
-                
-                /* let students: Document[];
-                let i: number = 0;
+                let populatedSubject = await Subject.findOne( {'name': req.params.subjectname} ).populate('students');
 
-                for(let stID of studentsIDs){
-                    let check = await Student.findOne({'_id': stID});
-                    if(check)
-                        students[i] = check;
-                    
-                    else
-                        i++;
-                } */
+                //let students = await Subject.findOne( {'name': req.params.subjectname} , 'students' ).populate('students');
 
-                res.json(students).status(200);
+                console.log(`\n Students in ${req.params.subjectname}:\n ${populatedSubject}`);
+                res.status(200).json(populatedSubject);
+
+                //console.log(students+`\n`);
+                //res.json(students).status(200);
+
             }
-            
-            
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
-    public async getStudentInSubject(req: Request, res: Response){
+    /* public async getStudentInSubject(req: Request, res: Response){
         //Gets the details of a specific Student enrolled in a Subject
         try{
             let checkSubject = await Subject.find( {'name': req.params.subjectname} );
             if(!checkSubject){
-                console.log(`Subject ${req.params.subjectname} not found`);
-                res.json({"error": `Subject ${req.params.subjectname} not found`}).status(404);
+                console.log(`\nSubject ${req.params.subjectname} not found`);
+                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
             }
             else{
                 let studentsInSubjectIDs = await Subject.find( {},'students' );
+                let {_id} = req.body;   //Id of the student
                 let found: Boolean = false;
                 for(let stID of studentsInSubjectIDs){
-                    let match = Student.findOne( {'_id': stID} , {'name':req.params.studentname} );
-                    if(match){
-                        found = true;
-                        res.json(match).status(200);
-                    }
+                    // let match = Student.findOne( {'_id': stID} , {'name':req.params.studentname} ); //PASAR EL ID MEJOR
+                    //if(match){
+                    //    found = true;
+                    //    res.status(200).json(match);
+                    //}
+                    let student = Student.findOne({'_id':_id});
+                    if()
                 }
                 if(!found){
-                    console.log(`Student ${req.params.studentname} not found in Subject ${req.params.subjectname}`);
-                    res.json({"error": `Student ${req.params.studentname} not found in Subject ${req.params.subjectname}`}).status(404);
+                    console.log(`\nStudent ${req.params.studentname} not found in Subject ${req.params.subjectname}`);
+                    res.status(404).json({"error": `Student ${req.params.studentname} not found in Subject ${req.params.subjectname}`});
                 }
             }
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
-    }
+    } */
 
     public async addSubject (req: Request, res: Response){
-        //Add a new Subject
+        //Adds a new Subject
         try{
             //let {name,students} = req.body;
             let {name} = req.body;
             let checkSubject = await Subject.findOne( {'name': name} );
             if(!checkSubject){
                 //let newSubject = new Subject({name,students});
-                let newSubject = new Subject({name}); //We assume the Subject is going to be populated later with function addStudentToSubject
+                let newSubject = new Subject( {name} ); //We assume the Subject is going to be populated later with function addStudentToSubject
                 await newSubject.save();
-                console.log(`Added Subject: ${newSubject}`);
-                res.status(201);
-
-                /* let addedDocument = await newSubject.save();
-                let addedSubject = addedDocument.toObject();
-                if(addedSubject.name == name){
-                    console.log(`Added Subject: ${name}`);
-                    res.status(201);
-                }
-                else{
-                    console.log("Error adding the Subject");
-                    res.status(500);
-                } */
-
+                console.log(`\nAdded Subject:\n ${newSubject}`);
+                res.status(201).json(newSubject);
             }
             else{
-                console.log(`Subject already exists: ${checkSubject}`);
-                res.json({"error": `Subject already exists: ${checkSubject}`}).status(409);
+                console.log(`\nSubject already exists:\n ${checkSubject}`);
+                res.status(409).json({"error": `Subject already exists: ${checkSubject}`});
             }
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
     public async addStudentToSubject(req: Request, res: Response){
+        //Adds the given Student to the given Subject
         try{
             let checkSubject = await Subject.findOne( {'name': req.params.subjectname} );
-            let {name} = req.body; //We only need the Student's name but then he must be already inside the DB
-            let checkStudent = await Student.findOne( {'name': name} );
+            let {_id} = req.body; // id of the Student
+            //let checkStudent = await Student.findOne( {'name': name} );
+            let checkStudent = await Student.findOne( {'_id': _id}, 'name' );
             if(checkSubject && checkStudent){
-                let studentID = await Student.findOne( {'name': name}, '_id' );
-                await Subject.updateOne( {'name': req.params.subjectname}, {$addToSet:{'students':studentID}} );
-                console.log(`Student ${name} has been added to Subject ${req.params.subjectname}`);
-                res.status(201);
+                //let studentID = await Student.findOne( {'name': name}, '_id' );
+                await Subject.updateOne( {'name': req.params.subjectname}, {$addToSet:{'students':_id}} ).then((data) => {
+                    if(data.nModified == 1){
+                        console.log(`\nStudent ${checkStudent} has been added to Subject ${req.params.subjectname}`);
+                        res.status(201).json({"response": `Student ${checkStudent} has been added to Subject ${req.params.subjectname}`});
+                    }
+                    else{
+                        console.log(`\nStudent ${checkStudent} is already enrolled in Subject ${req.params.subjectname}`);
+                        res.status(409).json({"response": `Student ${checkStudent} is already enrolled in Subject ${req.params.subjectname}`});
+                    }
+                });
             }
             else if (!checkStudent){
-                console.log(`Student ${name} not found`);
-                res.json({"error": `Student ${name} not found`}).status(404);
+                console.log(`\nStudent not found`);
+                res.status(404).json({"error": `Student not found`});
             }
             else{
-                console.log(`Subject ${req.params.subjectname} not found`);
-                res.json({"error": `Subject ${req.params.subjectname} not found`}).status(404);
+                console.log(`\nSubject ${req.params.subjectname} not found`);
+                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
             }
         }
         catch(error){
-            console.log(error);
-            res.status(500);
+            console.log(`\n` + error);
+            res.status(500).json({"error": `${error}`});
         }
     }
 
