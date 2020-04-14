@@ -4,6 +4,7 @@ import Student from '../models/Student';
 class DegreeController {
 
     public async getDegrees(req:Request, res:Response){
+        //Returns the list of all the degrees
         try{
             let degrees = await Student.find({}, 'studies' );
             console.log(`\nAll degrees:\n${degrees}`);
