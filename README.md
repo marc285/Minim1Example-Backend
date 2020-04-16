@@ -12,7 +12,7 @@ GET   /degrees/:degreename/students      Returns the Students enrolled 
 `studentRoutes`  
 HTTP --------------- URL --------------- Description  
 GET   /students                          Returns the list of all the Students  
-POST  /students/:studentname             Returns the details of a Student  
+GET   /students/:studentid               Returns the details of a Student  
 POST  /students/new                      Adds a new Student  
   
 `subjectRoutes`  
@@ -22,4 +22,4 @@ GET   /subjects/:subjectname             Returns the details of 
 GET   /subjects/:subjectname/students    Returns the Subject with the Students in it (insted of their IDs)
 ~~GET   /subjects/:subjectname/students/:studentname Returns the details of a specific Student enrolled in a Subject~~  
 POST  /subjects/new                      Adds a new Subject  
-PUT  /subjects/:subjectname/addstudent  Adds the given Student to the given Subject  
+PUT   /subjects/:subjectname/addstudent  Adds the given Student to the given Subject  
