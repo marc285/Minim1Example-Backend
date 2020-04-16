@@ -12,7 +12,7 @@ class SubjectController {
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json(`${error}`);
         }
     }
 
@@ -22,14 +22,14 @@ class SubjectController {
             let subject = await Subject.findOne( {'name': req.params.subjectname} );    //We search by name (not by id) as Subjects are unique
             if(!subject){
                 console.log(`\nSubject ${req.params.subjectname} not found`);
-                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
+                res.status(404).json(`Subject ${req.params.subjectname} not found`);
             }
             else
                 res.status(200).json(subject);
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json(`${error}`);
         }
     }
 
@@ -39,7 +39,7 @@ class SubjectController {
             let checkSubject = await Subject.find( {'name': req.params.subjectname} );  //We search by name (not by id) as Subjects are unique
             if(!checkSubject){
                 console.log(`\nSubject ${req.params.subjectname} not found`);
-                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
+                res.status(404).json(`Subject ${req.params.subjectname} not found`);
             }
             else{
                 //let subj:Subject = new Subject();
@@ -58,7 +58,7 @@ class SubjectController {
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json(`${error}`);
         }
     }
 
@@ -110,12 +110,12 @@ class SubjectController {
             }
             else{
                 console.log(`\nSubject already exists:\n ${checkSubject}`);
-                res.status(409).json({"error": `Subject already exists: ${checkSubject}`});
+                res.status(409).json(`Subject already exists: ${checkSubject}`);
             }
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json( `${error}`);
         }
     }
 
@@ -131,26 +131,26 @@ class SubjectController {
                 await Subject.updateOne( {'name': req.params.subjectname}, {$addToSet:{'students':_id}} ).then((data) => {
                     if(data.nModified == 1){
                         console.log(`\nStudent ${checkStudent} has been added to Subject ${req.params.subjectname}`);
-                        res.status(201).json({"response": `Student ${checkStudent} has been added to Subject ${req.params.subjectname}`});
+                        res.status(201).json(`Student ${checkStudent} has been added to Subject ${req.params.subjectname}`);
                     }
                     else{
                         console.log(`\nStudent ${checkStudent} is already enrolled in Subject ${req.params.subjectname}`);
-                        res.status(409).json({"response": `Student ${checkStudent} is already enrolled in Subject ${req.params.subjectname}`});
+                        res.status(409).json(`Student ${checkStudent} is already enrolled in Subject ${req.params.subjectname}`);
                     }
                 });
             }
             else if (!checkStudent){
                 console.log(`\nStudent not found`);
-                res.status(404).json({"error": `Student not found`});
+                res.status(404).json(`Student not found`);
             }
             else{
                 console.log(`\nSubject ${req.params.subjectname} not found`);
-                res.status(404).json({"error": `Subject ${req.params.subjectname} not found`});
+                res.status(404).json(`Subject ${req.params.subjectname} not found`);
             }
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json(`${error}`);
         }
     }
 

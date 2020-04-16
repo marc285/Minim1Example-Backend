@@ -12,7 +12,7 @@ class DegreeController {
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json( `${error}`);
         }
     }
 
@@ -22,7 +22,7 @@ class DegreeController {
             let students = await Student.find( {studies: req.params.degreename} );
             if(!students){
                 console.log("\nNot existing Degree or no Students enrolled");
-                res.status(404).json({"error": "Not existing Degree or no Students enrolled"});
+                res.status(404).json("Not existing Degree or no Students enrolled");
             }
             else{
                 console.log(`\nStudents enrolled in ${req.params.degreename}:\n ${students}`);
@@ -31,7 +31,7 @@ class DegreeController {
         }
         catch(error){
             console.log(`\n` + error);
-            res.status(500).json({"error": `${error}`});
+            res.status(500).json(`${error}`);
         }
     }
 }
